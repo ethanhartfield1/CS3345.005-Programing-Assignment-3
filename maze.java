@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 public class maze{
+    private int[][] maze;
+    public maze(int n, int m){
+            maze = generateMaze(n, m);
+        }
     public static void main(String[] args){
             Scanner scan = new Scanner(System.in);
             int n=1, m=1;
@@ -18,14 +22,13 @@ public class maze{
                     scan.nextLine();
                  }
             }
-            maze M = new maze();
-            M.generateMaze(n, m);
+            maze M = new maze(n,m);
             Runnable r = new Runnable(){
                 @Override
                 public void run(){
-                    DisplayMaze m = new DisplayMaze();
+                    DisplayMaze display = new DisplayMaze(M.maze);
                     JFrame f = new JFrame("GenerateMaze");
-                    f.add(m.getGui());
+                    f.add(display.getGui());
                     f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     f.setLocationByPlatform(true);
                     f.pack();
@@ -35,7 +38,7 @@ public class maze{
             };
             SwingUtilities.invokeLater(r);
         }
-    public void generateMaze(int n, int m){
+    public int[][] generateMaze(int n, int m){
             int[][] maze = new int[n][m];
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < m; j++){
@@ -48,5 +51,6 @@ public class maze{
                     }
                 }
             }
+            return maze;
         }
     }

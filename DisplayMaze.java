@@ -5,14 +5,15 @@ import javax.swing.border.*;
 
 public class DisplayMaze{
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-    private JPanel[][] mazeSquares = new JPanel[9][9];
+    private JButton[][] mazeSquares;
     private JPanel maze;
 
-    DisplayMaze(){
-        initializeGui();
+    DisplayMaze(int[][] maze){
+        mazeSquares = new JButton[maze.length][maze[0].length];
+        initializeGui(maze);
     }
 
-    public final void initializeGui(){
+    public final void initializeGui(int[][] truth){
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
@@ -54,12 +55,17 @@ public class DisplayMaze{
         Insets panelMargin = new Insets(0, 0, 0, 0);
         for(int i = 0; i < mazeSquares.length; i++){
             for(int j = 0; j < mazeSquares[i].length; j++){
-                JPanel p = new JPanel();
-                p.setMargin(panelMargin);
-                p.setBackground(Color.WHITE);
-                mazeSquares[j][i] = p;
+                JButton b = new JButton();
+                b.setMargin(panelMargin);
+                if(truth[i][j] == 0)
+                    b.setBackground(Color.WHITE);
+                else
+                    b.setBackground(Color.BLACK);
+                mazeSquares[i][j] = b;
+                maze.add(b);
             }
         }
+        
     }
     public final JComponent getGui(){
         return gui;
