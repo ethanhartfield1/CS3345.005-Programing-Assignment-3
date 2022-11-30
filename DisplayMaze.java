@@ -27,7 +27,7 @@ public class DisplayMaze{
         //tools.add(newGameAction);
         tools.add(new JButton("Draw path")); //TODO - add functionality!
 
-        maze = new JPanel(new GridLayout(0, 9)){
+        maze = new JPanel(new GridLayout(truth.length, truth[0].length)){
             @Override
             public final Dimension getPreferredSize(){
                 Dimension d = super.getPreferredSize();
