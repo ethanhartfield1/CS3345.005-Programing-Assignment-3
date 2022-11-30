@@ -3,29 +3,47 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+/**
+ * The DisplayMaze class uses java swing to make a gui to display the maze
+ * @author Ethan Hartfield
+ * 11/29/2022
+ */
 public class DisplayMaze{
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
     private JButton[][] mazeSquares;
     private JPanel maze;
 
-    DisplayMaze(int[][] maze){
-        mazeSquares = new JButton[maze.length][maze[0].length];
-        initializeGui(maze);
+    /**
+     * Constructor for DisplayMaze object
+     * @param m the Maze object
+     */
+    DisplayMaze(Maze m){
+        mazeSquares = new JButton[m.maze.length][m.maze[0].length];
+        initializeGui(m);
     }
-
-    public final void initializeGui(int[][] truth){
+    /**
+     * The initializeGui method initializes the gui for java swing
+     * @param m the Maze object
+     */
+    public final void initializeGui(Maze m){
+        int[][] truth = m.maze;
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
         JToolBar tools = new JToolBar();
         tools.setFloatable(false);
         gui.add(tools, BorderLayout.PAGE_START);
-        /*Action newGameAction = new AbstractAction("New"){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                setupNewMaze();
+        JButton drawPath = new JButton("Draw path");
+        drawPath.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                m.maze = m.showPath(m.maze, 0, 0, m.penalty, new StringBuilder());
+                for(int i = 0; i < mazeSquares.length; i++){
+                    for(int j = 0; j < mazeSquares[i].length; j++){
+                        if(truth[i][j] == 2)
+                            mazeSquares[i][j].setBackground(Color.GREEN);
+                    }
+                }
             }
-        }; */
-        //tools.add(newGameAction);
-        tools.add(new JButton("Draw path")); //TODO - add functionality!
+        });
+        tools.add(drawPath); //TODO - add functionality!
 
         maze = new JPanel(new GridLayout(truth.length, truth[0].length)){
             @Override
@@ -59,14 +77,17 @@ public class DisplayMaze{
                 b.setMargin(panelMargin);
                 if(truth[i][j] == 0)
                     b.setBackground(Color.WHITE);
-                else
+                else if(truth[i][j] == 1)
                     b.setBackground(Color.BLACK);
+                else
+                    b.setBackground(Color.GREEN);
                 mazeSquares[i][j] = b;
                 maze.add(b);
             }
         }
         
     }
+
     public final JComponent getGui(){
         return gui;
     }
