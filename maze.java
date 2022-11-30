@@ -3,8 +3,8 @@ import java.awt.*;
 import java.util.*;
 public class maze{
     private int[][] maze;
-    
-    private final static int[][] DIRS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    private final static Object[][] DIRS = {{1, 0, "N"}, {-1, 0, "S"}, {0, 1, "E"}, {0, -1, "W"}};
     public maze(int n, int m){
         maze = generateMaze(n, m);
     }
@@ -53,10 +53,13 @@ public class maze{
                 }
             }
         }
-        return maze;
+        if(isValid(maze, 0, 0, 0)) {
+            return maze;
+        }
+        return generateMaze(n, m);
     }
 
-    public int[][] dfs(int[][] maze, int r, int c, int wallBreaks) {
+    public int[][] showPath(int[][] maze, int r, int c, int wallBreaks, StringBuilder path) {
         if(r < maze.length && r >= 0 && c < maze[0].length && c >= 0 && maze[r][c] != 2) {
             if(!(maze[r][c] == 1 && wallBreaks == 0)) {
                 if(maze[r][c] == 1) {
@@ -73,15 +76,40 @@ public class maze{
                     }
                     return copy;
                 }
-                for(int[] dir : DIRS) {
-                    int[][] newMaze = dfs(maze, r + dir[0], c + dir[1], wallBreaks);
+                for(Object[] dir : DIRS) {
+                    int[][] newMaze = showPath(maze, r + (int)dir[0], c + (int)dir[1], wallBreaks, path.append(dir[2]));
                     if(newMaze[maze.length - 1][maze[0].length - 1] == 2) {
+                        System.out.println(path);
                         return newMaze;
                     }
+                    path.deleteCharAt(path.length() - 1);
                 }
                 maze[r][c] = temp;
             }
         }
         return maze;
+    }
+
+    public boolean isValid(int[][] maze, int r, int c, int wallBreaks) {
+        if(r < maze.length && r >= 0 && c < maze[0].length && c >= 0 && maze[r][c] != 2) {
+            if(!(maze[r][c] == 1 && wallBreaks == 0)) {
+                if(maze[r][c] == 1) {
+                    wallBreaks--;
+                }
+                int temp = maze[r][c];
+                maze[r][c] = 2;
+                if(r == maze.length - 1 && c == maze[0].length - 1) {
+                    return true;
+                }
+                for(Object[] dir : DIRS) {
+                    boolean isValid = isValid(maze, r + (int)dir[0], c + (int)dir[1], wallBreaks);
+                    if(isValid) {
+                        return true;
+                    }
+                }
+                maze[r][c] = temp;
+            }
+        }
+        return false;
     }
 }
